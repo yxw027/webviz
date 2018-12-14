@@ -9,55 +9,43 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/node:11-browsers
+      - image: cruise/webviz-ci:0.0.1
 
     steps:
       - checkout
 
-      - restore_cache:
-          keys:
-            - global-deps-{{ checksum "package-lock.json" }}
-            - global-deps-
-
-      - restore_cache:
-          keys:
-            - regl-worldview-deps-{{ checksum "packages/regl-worldview/package-lock.json" }}
-            - regl-worldview-deps-
-
+      # Install dependencies, using caches.
+      # - restore_cache:
+      #     keys:
+      #       - global-deps-{{ checksum "package-lock.json" }}
+      #       - global-deps-
+      # - restore_cache:
+      #     keys:
+      #       - regl-worldview-deps-{{ checksum "packages/regl-worldview/package-lock.json" }}
+      #       - regl-worldview-deps-
       - run: npm run install-ci
-
       - save_cache:
           paths: ["node_modules"]
           key: global-deps-{{ checksum "package-lock.json" }}
-
       - save_cache:
           paths: ["packages/regl-worldview/node_modules"]
           key: regl-worldview-deps-{{ checksum "packages/regl-worldview/package-lock.json" }}
 
-      - run:
-          name: "npm run lint"
-          command: npm run lint
+      # Run all the things.
+      # - run: npm run lint
+      # - run: npm run flow
+      # - run: npm test
+      # - run: npm run build
+      - run: npm run screenshot-ci
 
-      - run:
-          name: "npm run flow"
-          command: "npm run flow"
+      # Store artifacts
+      - store_artifacts:
+          path: __screenshots__
 
-      - run:
-          name: "npm test"
-          command: npm test
-
-      - run:
-          name: "npm run build"
-          command: npm run build
-
-      - run:
-          name: "npm run screenshot-ci"
-          command: npm run screenshot-ci
-
+      # Deploy when on master branch
       - add_ssh_keys:
           fingerprints:
             - "d5:b8:7b:18:02:16:f1:90:6c:6d:34:b7:71:55:ae:b4"
-
       - run:
           name: "deploy docs if on master"
           command: if [ $CIRCLE_BRANCH = "master" ]; then git config --global user.email "$GH_EMAIL" && git config --global user.name "$GH_NAME" && npm run docs-deploy; fi
