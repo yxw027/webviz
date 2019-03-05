@@ -60,7 +60,11 @@ const singleColor = (regl) =>
 
     // turn off depth to prevent flicker
     // because multiple items are rendered to the same z plane
-    depth: { enable: true, mask: false },
+    depth: {
+      enable: true,
+      mask: (context, props) => !props.disableDepthMask,
+    },
+
     blend,
 
     count: (context, props) => props.points.length,

@@ -73,7 +73,8 @@ export const triangle = (range: number, id: number = 1) => {
       position: { x: range, y: range, z: range },
     },
     points: [{ x: range - 2, y: 0, z: 0 }, { x: range + 2, y: 0, z: 0 }, { x: range - 2, y: 5, z: 0 }],
-    color: { r: 1, g: 1, b: 1, a: 1 },
+    color: { r: 1, g: 1, b: 1, a: 0.5 },
+    useDepthMask: true,
   };
   return marker;
 };

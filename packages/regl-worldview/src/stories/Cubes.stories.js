@@ -111,25 +111,25 @@ class Wat extends React.Component<any, any> {
 
     return (
       <Container cameraState={DEFAULT_CAMERA_STATE}>
-        <Triangles onClick={this.onClickTriangle} getHitmapId={this.getHitmapId}>
-          {triangles}
-        </Triangles>
-        <FilledPolygons onClick={this.onClickPolygon} getHitmapId={this.getHitmapId}>
-          {filledPolygons}
-        </FilledPolygons>
         <Cubes onClick={this.onClickCube} getHitmapId={this.getHitmapId}>
           {cubes}
         </Cubes>
         <Spheres onClick={this.onClickSphere} getHitmapId={this.getHitmapId}>
           {spheres}
         </Spheres>
+        <Triangles onClick={this.onClickTriangle} getHitmapId={this.getHitmapId}>
+          {triangles}
+        </Triangles>
+        <FilledPolygons useDepthMask onClick={this.onClickPolygon} getHitmapId={this.getHitmapId}>
+          {filledPolygons}
+        </FilledPolygons>
       </Container>
     );
   }
 }
 
 storiesOf("Worldview", module)
-  .add("wat", withRange((range) => <Wat range={range} />))
+  .add("wat", () => <Wat />)
   .add(
     "<Cubes> - single",
     withRange((range) => {
