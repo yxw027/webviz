@@ -181,6 +181,7 @@ export function makeCommand<T>(
   options: ?MakeCommandOptions = {}
 ): React.StatelessFunctionalComponent<T> {
   let warnedAboutDeprecatedGetHitmapId = false;
+  let warnOnce = false;
   const cmd = ({
     children,
     getObjectFromHitmapId: getObjectFromHitmapIdAlt,
@@ -192,7 +193,11 @@ export function makeCommand<T>(
     const getHitmapProps = getHitmapPropsAlt || options.getHitmapProps;
     let hitmapProps;
 
-    if ((getHitmapPropsAlt && !getObjectFromHitmapIdAlt) || (!getHitmapPropsAlt && getObjectFromHitmapIdAlt)) {
+    if (
+      (getHitmapPropsAlt && !getObjectFromHitmapIdAlt && !warnOnce) ||
+      (!getHitmapPropsAlt && getObjectFromHitmapIdAlt && !warnOnce)
+    ) {
+      warnOnce = true;
       console.error(
         "Possible wrong hitmap id mapping in the instanced rendering. Keep or remove both `getHitmapProps` and `getObjectFromHitmapId` props."
       );

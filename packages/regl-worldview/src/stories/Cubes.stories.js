@@ -5,10 +5,10 @@ import React from "react";
 
 import { intToRGB } from "../utils/commandUtils";
 import Container from "./Container";
-import { cube, p, UNIT_QUATERNION, buildMatrix, rng } from "./util";
+import { cube, filledPolygon, sphere, triangle, p, UNIT_QUATERNION, buildMatrix, rng } from "./util";
 import withRange from "./withRange";
 
-import { Cubes, DEFAULT_CAMERA_STATE } from "..";
+import { Cubes, FilledPolygons, Spheres, Triangles, DEFAULT_CAMERA_STATE } from "..";
 
 class Wrapper extends React.Component<any> {
   render() {
@@ -90,7 +90,46 @@ class DynamicCubes extends React.Component<any, any> {
   }
 }
 
+class Wat extends React.Component<any, any> {
+  state = {
+    spheres: [sphere(1, 1)],
+    filledPolygons: [filledPolygon(4, 4)],
+    cubes: [cube(7, 7)],
+    triangles: [triangle(12, 12)],
+  };
+
+  getHitmapId = (o) => o.id;
+
+  onClickCube = (_, { object: c }) => console.log("Clicked on cube with id", c.id);
+  onClickSphere = (_, { object: s }) => console.log("Clicked on sphere with id", s.id);
+  onClickPolygon = (_, { object: p }) => console.log("Clicked on polygon with id", p.id);
+  onClickTriangle = (_, { object: t }) => console.log("Clicked on triangle with id", t.id);
+
+  render() {
+    const { range } = this.props;
+    const { spheres, filledPolygons, cubes, triangles } = this.state;
+
+    return (
+      <Container cameraState={DEFAULT_CAMERA_STATE}>
+        <Triangles onClick={this.onClickTriangle} getHitmapId={this.getHitmapId}>
+          {triangles}
+        </Triangles>
+        <FilledPolygons onClick={this.onClickPolygon} getHitmapId={this.getHitmapId}>
+          {filledPolygons}
+        </FilledPolygons>
+        <Cubes onClick={this.onClickCube} getHitmapId={this.getHitmapId}>
+          {cubes}
+        </Cubes>
+        <Spheres onClick={this.onClickSphere} getHitmapId={this.getHitmapId}>
+          {spheres}
+        </Spheres>
+      </Container>
+    );
+  }
+}
+
 storiesOf("Worldview", module)
+  .add("wat", withRange((range) => <Wat range={range} />))
   .add(
     "<Cubes> - single",
     withRange((range) => {
