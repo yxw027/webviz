@@ -56,6 +56,7 @@
     "wasm-lz4": "0.0.2"
   },
   "devDependencies": {
+    "eslint-plugin-react-hooks": "^1.6.0",
     "flow-bin": "0.95.1"
   },
   "importjs": {
