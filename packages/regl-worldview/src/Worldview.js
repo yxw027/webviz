@@ -212,7 +212,6 @@ export class WorldviewBase extends React.Component<BaseProps, State> {
     worldviewContext
       .readHitmap(canvasX, canvasY)
       .then((objectId) => {
-        console.log("objectId: ", objectId);
         if (worldviewHandler) {
           handleWorldviewMouseInteraction(worldviewContext.getDrawPropByHitmapId(objectId), ray, e, worldviewHandler);
         }
