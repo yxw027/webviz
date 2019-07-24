@@ -55,7 +55,7 @@ for (let j = 0; j < NUM_MERIDIANS; j++) {
 const spheres = fromGeometry(points, faces);
 
 function defaultMapObjectToInstanceCount(object) {
-  return object.points.length;
+  return (object.points && object.points.length) || 1;
 }
 
 const Spheres = makeCommand<SphereList>("Spheres", spheres, {

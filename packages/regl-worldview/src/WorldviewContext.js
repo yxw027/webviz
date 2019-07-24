@@ -308,7 +308,7 @@ export class WorldviewContext {
       if (isHitmap) {
         const hitmapProps = drawProps.map((drawProp) => {
           const hitmapProp = { ...drawProp };
-          if (mapObjectToInstanceCount) {
+          if (mapObjectToInstanceCount && drawProp.points) {
             const instanceCount = mapObjectToInstanceCount(drawProp);
             const startColor = intToRGB(this._hitmapIdCounter);
             const allColors = new Array(drawProp.points.length).fill().map(() => startColor);
