@@ -103,7 +103,7 @@
   "scripts": {
     "bootstrap": "npm install && lerna bootstrap --hoist react",
     "install-ci": "npm ci && lerna bootstrap --hoist react",
-    "build": "lerna run build && webpack",
+    "build": "lerna run build && NODE_OPTIONS='--max-old-space-size=4096' webpack",
     "watch": "lerna run watch --parallel",
     "clean": "lerna run clean",
     "lerna": "lerna",
