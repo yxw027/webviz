@@ -26,7 +26,7 @@
     "moment": "2.22.2",
     "moment-duration-format": "2.2.2",
     "moment-timezone": "0.5.23",
-    "monaco-vim": "0.1.3",
+    "monaco-vim": "^0.1.4",
     "natsort": "2.0.0",
     "nearley": "2.15.1",
     "promise-queue": "2.2.5",
@@ -71,7 +71,6 @@
     "fake-indexeddb": "2.0.4",
     "fetch-mock": "7.2.5",
     "flow-bin": "0.106.2",
-    "monaco-editor-webpack-plugin": "1.7.0",
     "react-test-renderer": "16.10.2"
   },
   "importjs": {

@@ -21,6 +21,19 @@ import {
 
 const VS_WEBVIZ_THEME = "vs-webviz";
 
+// Since packaging is done by you, you need
+// to instruct the editor how you named the
+// bundles that contain the web workers.
+window.MonacoEnvironment = {
+  getWorkerUrl(moduleId, label) {
+    if (label === "typescript" || label === "javascript") {
+      return `${location.origin}/dist/ts.worker.js`;
+    }
+
+    return `${location.origin}/dist/editor.worker.js`;
+  },
+};
+
 type Props = { script: string, setScript: (script: string) => void, vimMode: boolean };
 const Editor = ({ script, setScript, vimMode }: Props) => {
   const editorRef = React.useRef(null);

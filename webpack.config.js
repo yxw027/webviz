@@ -54,6 +54,8 @@ module.exports = {
   entry: {
     docs: "./docs/src/index.js",
     webvizCoreBundle: "./packages/webviz-core/src/index.js",
+    "editor.worker": "./node_modules/monaco-editor/esm/vs/editor/editor.worker.js",
+    "ts.worker": "./node_modules/monaco-editor/esm/vs/language/typescript/ts.worker.js",
   },
   output: {
     path: path.resolve(`${__dirname}/docs/public/dist`),
@@ -89,7 +91,7 @@ module.exports = {
         test: /\.worker\.js$/,
         use: {
           loader: "worker-loader",
-          options: { name: "[name].[ext]?[hash]" },
+          options: { name: "[name]-[hash].[ext]" },
         },
       },
       {
@@ -166,10 +168,6 @@ module.exports = {
     new CaseSensitivePathsPlugin(),
     // https://github.com/jmblog/how-to-optimize-momentjs-with-webpack
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
-    new MonacoWebpackPlugin({
-      // available options: https://github.com/Microsoft/monaco-editor-webpack-plugin#options
-      languages: ["typescript", "javascript"],
-    }),
   ],
   node: {
     fs: "empty",
