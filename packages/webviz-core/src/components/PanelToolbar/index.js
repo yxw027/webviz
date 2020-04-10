@@ -169,7 +169,11 @@ function StandardMenuItems({ savePanelConfigs }: {| savePanelConfigs: (SaveConfi
                 tooltip="(shortcut: ` or ~)">
                 Split vertical
               </Item>
-              <Item icon={<TrashCanOutlineIcon />} onClick={close} disabled={isOnlyPanel} tooltip="(shortcut: ` or ~)">
+              <Item
+                icon={<TrashCanOutlineIcon />}
+                onClick={close}
+                disabled={isOnlyPanel && !panelContext?.tabId /* Allow removing the last panel in a tab layout. */}
+                tooltip="(shortcut: ` or ~)">
                 Remove panel
               </Item>
               <Item
@@ -223,7 +227,7 @@ const PanelToolbarControls = React.memo(function PanelToolbarControls(props: Pan
         {menuContent && <hr />}
         {menuContent}
       </Dropdown>
-      <MosaicDragHandle onDragStart={onDragStart} onDragEnd={onDragEnd}>
+      <MosaicDragHandle onDragStart={onDragStart} onDragEnd={onDragEnd} tabId={panelData?.tabId}>
         {/* Can only nest native nodes into <MosaicDragHandle>, so wrapping in a <span> */}
         <span>
           <Icon fade tooltip="Move panel (shortcut: ` or ~)">

@@ -17,7 +17,7 @@ import type {
   SaveConfigsPayload,
   SaveFullConfigPayload,
   ImportPanelLayoutPayload,
-  PanelConfig,
+  SavedProps,
   UserNodes,
   PlaybackConfig,
 } from "webviz-core/src/types/panels";
@@ -44,7 +44,7 @@ export type PanelsState = {
   // We store config for each panel in a hash keyed by the panel id.
   // This should at some point be renamed to `config` or `configById` or so,
   // but it's inconvenient to have this diverge from `PANEL_PROPS_KEY`.
-  savedProps: { [panelId: string]: PanelConfig },
+  savedProps: SavedProps,
   globalVariables: GlobalVariables,
   // old state which is migrated to globalVariables. Keeping it here to satisfy flow
   globalData?: GlobalVariables,

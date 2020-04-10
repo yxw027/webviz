@@ -9,6 +9,21 @@
 import { type GlobalVariables } from "webviz-core/src/hooks/useGlobalVariables";
 import { type LinkedGlobalVariables } from "webviz-core/src/panels/ThreeDimensionalViz/Interactions/useLinkedGlobalVariables";
 
+// Mosaic Types
+export type MosaicBranch = "first" | "second";
+export type MosaicPath = MosaicBranch[];
+export type MosaicKey = string;
+export type MosaicDirection = "row" | "column";
+export type MosaicDropTargetPosition = "top" | "bottom" | "left" | "right";
+export type MosaicNode =
+  | {
+      direction: MosaicDirection,
+      first: MosaicNode,
+      second: MosaicNode,
+      splitPercentage?: number,
+    }
+  | MosaicKey;
+
 export type PanelConfig = { [key: string]: any };
 export type PerPanelFunc<Config> = (Config) => Config;
 
@@ -39,10 +54,12 @@ export type SaveFullConfigPayload = {
   historyOptions?: EditHistoryOptions,
 };
 
+export type SavedProps = { [panelId: string]: PanelConfig };
+
 export type ImportPanelLayoutPayload = {
   // layout is the object passed to react-mosaic
   layout: any,
-  savedProps?: { [panelId: string]: PanelConfig },
+  savedProps?: SavedProps,
   globalVariables?: GlobalVariables,
   userNodes?: UserNodes,
   linkedGlobalVariables?: LinkedGlobalVariables,

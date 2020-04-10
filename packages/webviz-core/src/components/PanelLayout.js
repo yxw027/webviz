@@ -7,7 +7,7 @@
 //  You may not use this file except in compliance with the License.
 
 import React, { useCallback, useState, forwardRef, type ElementRef } from "react";
-import { MosaicWithoutDragDropContext, MosaicWindow } from "react-mosaic-component";
+import { MosaicWithoutDragDropContext, MosaicWindow, MosaicDumbWindow } from "react-mosaic-component";
 import { useSelector, useDispatch } from "react-redux";
 import "react-mosaic-component/react-mosaic-component.css";
 import { bindActionCreators } from "redux";
@@ -38,6 +38,14 @@ type Props = {
   savePanelConfigs: (SaveConfigsPayload) => Dispatcher<SAVE_PANEL_CONFIGS>,
   importHooks: boolean,
   forwardedRef?: ElementRef<any>,
+  mosaicId?: string,
+  tabId?: string,
+  /*
+   * React mosaic adds a DropTarget wrapper around the mosaic root; remove for
+   * Tab panels so that users can correctly drag panels in from the outer
+   * layout.
+   */
+  removeRootDropTarget?: boolean,
 };
 
 // we subclass the mosiac layout without dragdropcontext
@@ -52,7 +60,7 @@ class MosaicRoot extends MosaicWithoutDragDropContext {
 }
 
 export function UnconnectedPanelLayout(props: Props) {
-  const { importHooks, layout, onChange, savePanelConfigs: saveConfigs } = props;
+  const { importHooks, layout, onChange, savePanelConfigs: saveConfigs, tabId, removeRootDropTarget, mosaicId } = props;
   const [hooksImported, setHooksImported] = useState(getGlobalHooks().areHooksImported());
 
   if (importHooks && !hooksImported) {
@@ -100,13 +108,16 @@ export function UnconnectedPanelLayout(props: Props) {
           </MosaicWindow>
         );
       }
+
+      const MosaicWindowComponent = type === "Tab" ? MosaicDumbWindow : MosaicWindow;
+
       return (
-        <MosaicWindow key={path} path={path} createNode={createTile} renderPreview={() => null}>
-          <PanelComponent childId={id} />
-        </MosaicWindow>
+        <MosaicWindowComponent key={path} path={path} createNode={createTile} renderPreview={() => null} tabId={tabId}>
+          <PanelComponent childId={id} tabId={tabId} />
+        </MosaicWindowComponent>
       );
     },
-    [createTile]
+    [createTile, tabId]
   );
 
   return (
@@ -119,6 +130,8 @@ export function UnconnectedPanelLayout(props: Props) {
           value={layout}
           onChange={onChange}
           setMosaicId={props.setMosaicId}
+          mosaicId={mosaicId}
+          removeRootDropTarget={removeRootDropTarget}
         />
       ) : (
         <Flex center style={{ width: "100%", height: "100%" }}>

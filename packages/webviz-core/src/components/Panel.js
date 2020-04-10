@@ -47,7 +47,7 @@ import type { RosDatatypes } from "webviz-core/src/types/RosDatatypes";
 import { getPanelTypeFromId } from "webviz-core/src/util";
 import { TAB_PANEL_TYPE } from "webviz-core/src/util/globalConstants";
 
-type Props<Config> = { childId?: string, config?: Config, saveConfig?: (Config) => void };
+type Props<Config> = { childId?: string, config?: Config, saveConfig?: (Config) => void, tabId?: string };
 type ActionProps = {|
   savePanelConfigs: (SaveConfigsPayload) => void,
   saveFullPanelConfig: (SaveFullConfigPayload) => PanelConfig,
@@ -92,7 +92,7 @@ export default function Panel<Config: PanelConfig>(
       [dispatch]
     );
 
-    const { childId, config: originalConfig, saveConfig } = props;
+    const { childId, config: originalConfig, saveConfig, tabId } = props;
     const { mosaicActions }: { mosaicActions: MosaicRootActions } = useContext(MosaicContext);
     const { mosaicWindowActions }: { mosaicWindowActions: MosaicWindowActions } = useContext(MosaicWindowContext);
 
@@ -287,6 +287,7 @@ export default function Panel<Config: PanelConfig>(
           openSiblingPanel,
           enterFullscreen,
           isHovered,
+          tabId,
         }}>
         {/* Ensure user exits full-screen mode when leaving window, even if key is still pressed down */}
         <DocumentEvents target={window} enabled onBlur={exitFullScreen} />
@@ -301,7 +302,7 @@ export default function Panel<Config: PanelConfig>(
           clip>
           {fullScreen ? <div className={styles.notClickable} /> : null}
           {type !== TAB_PANEL_TYPE && quickActionsKeyPressed && !fullScreen && (
-            <MosaicDragHandle>
+            <MosaicDragHandle tabId={tabId}>
               <div className={styles.quickActionsOverlay} data-panel-overlay>
                 <div>
                   <FullscreenIcon />

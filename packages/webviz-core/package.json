@@ -51,7 +51,7 @@
     "react-json-tree": "0.11.1",
     "react-markdown": "4.0.4",
     "react-monaco-editor": "0.28.0",
-    "react-mosaic-component": "4.0.0",
+    "react-mosaic-component": "troygibb/react-mosaic#326e1dd84341c1770ac75f4e8df58cb3ec4a73b4",
     "react-outside-click-handler": "1.2.4",
     "react-redux": "7.1.0",
     "react-resize-detector": "4.2.1",
