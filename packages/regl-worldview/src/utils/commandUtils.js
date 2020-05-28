@@ -106,18 +106,33 @@ export const defaultReglDepth = {
 };
 
 export const defaultDepth = {
-  enable: (context: any, props: any) => (props.depth && props.depth.enable) || defaultReglDepth.enable,
-  mask: (context: any, props: any) => (props.depth && props.depth.mask) || defaultReglDepth.mask,
+  enable: (context: any, props: any) =>
+    props.depth && props.depth.enable !== undefined ? props.depth.enable : defaultReglDepth.enable,
+  mask: (context: any, props: any) =>
+    props.depth && props.depth.mask !== undefined ? props.depth.mask : defaultReglDepth.mask,
 };
 
 export const defaultBlend = {
   ...defaultReglBlend,
-  enable: (context: any, props: any) => (props.blend && props.blend.enable) || defaultReglBlend.enable,
+  enable: (context: any, props: any) =>
+    props.blend && props.blend.enable !== undefined ? props.blend.enable : defaultReglBlend.enable,
   func: (context: any, props: any) => (props.blend && props.blend.func) || defaultReglBlend.func,
 };
 
 // TODO: deprecating, remove before 1.x release
 export const blend = defaultBlend;
+
+export const defaultReglCull = {
+  enable: false,
+  face: "back",
+};
+
+export const defaultCull = {
+  enable: (context: any, props: any) =>
+    props.cull && props.cull.enable !== undefined ? props.cull.enable : defaultReglCull.enable,
+  face: (context: any, props: any) =>
+    props.cull && props.cull.face !== undefined ? props.cull.face : defaultReglCull.face,
+};
 
 // takes a regl command definition object and injects
 // position and rotation from the object pose and also
