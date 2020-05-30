@@ -34,6 +34,7 @@ export default class KeyListener extends React.Component<Props> {
       target.addEventListener("keypress", this.handleEvent);
       target.addEventListener("keyup", this.handleEvent);
     }
+    window.addEventListener("blur", this.handleEvent);
   }
 
   componentWillUnmount() {
@@ -44,6 +45,7 @@ export default class KeyListener extends React.Component<Props> {
       target.removeEventListener("keypress", this.handleEvent);
       target.removeEventListener("keyup", this.handleEvent);
     }
+    window.removeEventListener("blur", this.handleEvent);
   }
 
   callHandlers(handlers: ?KeyHandlers, event: KeyboardEvent) {
@@ -75,6 +77,7 @@ export default class KeyListener extends React.Component<Props> {
       case "keypress":
         this.callHandlers(this.props.keyPressHandlers, event);
         break;
+      case "blur":
       case "keyup":
         this.callHandlers(this.props.keyUpHandlers, event);
         break;
