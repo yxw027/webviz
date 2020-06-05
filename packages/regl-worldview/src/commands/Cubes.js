@@ -17,10 +17,10 @@ import Command, { type CommonCommandProps } from "./Command";
 
 export const BlendMode = {
   default: 0,
-  multipass: 1,
-  multiplicative: 2,
-  opaqueFirst: 3,
-  opaqueFirstAndSortTransparent: 4,
+  singlePassOpaqueFirst: 30,
+  singlePassOpaqueFirstDepthReadOnly: 301,
+  multipassBackFront: 31,
+  multipassBackFrontCustomBlend: 32,
 };
 
 function makeCommand({ blendMode = BlendMode.default }: {| blendMode: BlendMode |}) {
@@ -61,15 +61,35 @@ function makeCommand({ blendMode = BlendMode.default }: {| blendMode: BlendMode 
     )(regl);
 
     return (props) => {
-      if (blendMode === BlendMode.multipass) {
+      if (blendMode === BlendMode.singlePassOpaqueFirst) {
         const groups = partition(props, (cube) => {
           const { color: { a } = {} } = cube;
           return a === 1;
         });
+        regl(geometry)([...groups[0], ...groups[1]]);
+      } else if (blendMode === BlendMode.singlePassOpaqueFirstDepthReadOnly) {
+        const groups = partition(props, (cube) => {
+          const { color: { a } = {} } = cube;
+          return a === 1;
+        });
+        regl(geometry)(groups[0]);
         regl({
           ...geometry,
-        })(groups[0]);
-        // two pass rendering
+          depth: {
+            enable: true,
+            mask: false,
+          },
+          cull: {
+            enable: true,
+            face: "back",
+          },
+        })(groups[1]);
+      } else if (blendMode === BlendMode.multipassBackFront) {
+        const groups = partition(props, (cube) => {
+          const { color: { a } = {} } = cube;
+          return a === 1;
+        });
+        regl(geometry)(groups[0]);
         regl({
           ...geometry,
           depth: {
@@ -92,29 +112,41 @@ function makeCommand({ blendMode = BlendMode.default }: {| blendMode: BlendMode 
             face: "back",
           },
         })(groups[1]);
-      } else if (blendMode === BlendMode.multiplicative) {
+      } else if (blendMode === BlendMode.multipassBackFrontCustomBlend) {
+        const groups = partition(props, (cube) => {
+          const { color: { a } = {} } = cube;
+          return a === 1;
+        });
+        regl(geometry)(groups[0]);
         regl({
           ...geometry,
+          depth: {
+            enable: true,
+            mask: false,
+          },
+          cull: {
+            enable: true,
+            face: "back",
+          },
+        })(groups[1]);
+        regl({
+          ...geometry,
+          depth: {
+            enable: true,
+            mask: false,
+          },
+          cull: {
+            enable: true,
+            face: "front",
+          },
           blend: {
             ...defaultBlend,
             func: {
-              src: "one",
-              dst: "one",
+              src: "src alpha",
+              dst: "dst color",
             },
           },
-        })(props);
-      } else if (blendMode === BlendMode.opaqueFirst) {
-        const groups = partition(props, (cube) => {
-          const { color: { a } = {} } = cube;
-          return a === 1;
-        });
-        regl(geometry)([...groups[0], ...groups[1]]);
-      } else if (blendMode === BlendMode.opaqueFirstAndSortTransparent) {
-        const groups = partition(props, (cube) => {
-          const { color: { a } = {} } = cube;
-          return a === 1;
-        });
-        regl(geometry)([...groups[0], ...groups[1]]);
+        })(groups[1]);
       } else {
         // single pass rendering
         regl(geometry)(props);
